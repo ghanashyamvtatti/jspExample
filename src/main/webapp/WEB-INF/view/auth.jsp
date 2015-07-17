@@ -18,7 +18,7 @@
 				<c:when test="${empty passwordError }">
 				<c:choose>
 					<c:when test="${empty roleError }">
-						<h2>Welcome ${username } !</h2>
+						<h2>Welcome ${desig} ${username } !</h2>
 						<h2>Your roles :</h2>
 						<ul>
 							<c:forEach items="${roles}" var="role">

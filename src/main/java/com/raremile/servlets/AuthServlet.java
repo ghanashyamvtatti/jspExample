@@ -1,7 +1,9 @@
 package com.raremile.servlets;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -40,13 +42,28 @@ public class AuthServlet extends HttpServlet {
 		UserDAL userDal = new UserDAL();
 		User user = new User();
 		List<String> userRole = null;
+		String desig = "";
+		int admin = 0, dev = 0, manager = 0;
 		req.setAttribute("userError", "");
+		Map<String, Integer> roleMap = new HashMap<String, Integer>(){{
+			put("developer", 1);
+			put("manager", 2);
+			put("admin", 3);
+		}};
 		try{
 			user = userDal.findUser(username);
 			if(password.equals(user.getPassword())){
 				req.setAttribute("username", username);
 				try{
 					userRole = roleDal.findRoles(user.getUserID());
+					int maxRole = 0;
+					for (String role : userRole) {
+						if(maxRole < roleMap.get(role)){
+							maxRole = roleMap.get(role);
+							desig = role;
+						}
+					}
+					req.setAttribute("desig", desig);
 					req.setAttribute("roles", userRole);
 				}catch(NoRoleException e){
 					req.setAttribute("roleError", "No Role found");
